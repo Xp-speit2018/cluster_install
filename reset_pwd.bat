@@ -1,12 +1,11 @@
 @echo off
-REM Check if a password argument was provided
+REM Check if a password argument was provided and use default if not
 if "%~1"=="" (
-    echo Usage: %0 newPassword
-    exit /b 1
+    echo No new password provided. Using default password.
+    set newPassword=123456
+) else (
+    set newPassword=%~1
 )
-
-REM Set the new password from the first script argument
-set newPassword=%~1
 
 REM Change the password
 net user %username% %newPassword%
@@ -17,4 +16,3 @@ if %errorlevel% == 0 (
 )
 
 @REM pause
-
