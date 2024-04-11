@@ -47,11 +47,11 @@ def copy_contents(ip, username, port, dest):
 
 def remote_install(ip, username, port, dest, pasco_key=None):
     # run install.bat on remote
-    os.system(f'ssh -p {port} {username}@{ip} "cd {dest} && START install.bat {pasco_key}"')
+    os.system(f'ssh -p {port} {username}@{ip} "cd {dest} && install_anaconda.bat && install_pasco.bat {pasco_key}"')
 
 def _target(ip, username, port, dest, pasco_key=None):
-    # copy_pub(ip, username, port)
-    # copy_contents(ip, username, port, dest)
+    copy_pub(ip, username, port)
+    copy_contents(ip, username, port, dest)
     remote_install(ip, username, port, dest, pasco_key)
 
 if __name__ == "__main__":
