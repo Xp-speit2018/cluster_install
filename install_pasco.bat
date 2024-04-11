@@ -14,10 +14,10 @@ IF "%~1"=="" (
 
 REM Optional: Check if the installation was successful based on the error level (not all installers set this reliably)
 if %ERRORLEVEL% NEQ 0 (
-    echo Installation failed with error %ERRORLEVEL%.
+    ECHO Installation failed with error %ERRORLEVEL%.
+    EXIT /B %ERRORLEVEL%
 ) else (
-    echo Installation completed successfully.
+    ECHO Installation completed successfully.
 )
 
-REM Pause the script to see the output when running manually (remove this line for fully unattended installation)
-@REM pause
+EXIT /B 0

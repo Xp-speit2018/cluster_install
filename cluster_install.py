@@ -37,7 +37,7 @@ def copy_pub(ip, username, port, pub_key_path=Path.home() / '.ssh' / 'id_rsa.pub
 
 def copy_contents(ip, username, port, dest):
     # create a directory on remote
-    os.system(f'ssh -p {port} {username}@{ip} mkdir -p {dest}')
+    os.system(f'ssh -p {port} {username}@{ip} mkdir {dest}')
 
     # copy all *.bat files to remote
     os.system(f'scp -P {port} *.bat {username}@{ip}:{dest}')
@@ -47,11 +47,11 @@ def copy_contents(ip, username, port, dest):
 
 def remote_install(ip, username, port, dest, pasco_key=None):
     # run install.bat on remote
-    os.system(f'ssh -p {port} {username}@{ip} powershell "cd {dest} && install.bat {pasco_key}"')
+    os.system(f'ssh -p {port} {username}@{ip} "cd {dest} && START install.bat {pasco_key}"')
 
 def _target(ip, username, port, dest, pasco_key=None):
     # copy_pub(ip, username, port)
-    copy_contents(ip, username, port, dest)
+    # copy_contents(ip, username, port, dest)
     remote_install(ip, username, port, dest, pasco_key)
 
 if __name__ == "__main__":
@@ -67,12 +67,12 @@ if __name__ == "__main__":
     ] # TODO: Add IP addresses
 
     # dest is path to store tmp scripts
-    dest = f'C:\\Users\\{username}\\scripts' # TODO: verify path
+    dest = f'scripts'
     
     # copy_pub sequentially
-    for i, ip in enumerate(ips):
-        print(f'Copying public key to {ip}, {i+1}/{len(ips)}')
-        copy_pub(ip, username, port)
+    # for i, ip in enumerate(ips):
+    #     print(f'Copying public key to {ip}, {i+1}/{len(ips)}')
+    #     copy_pub(ip, username, port)
 
     # use one thread for each IP, _target
     threads = []

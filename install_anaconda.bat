@@ -8,7 +8,7 @@ if not exist "%INSTALLER%" (
     curl -L %ANACONDA_LINK% -o %INSTALLER%
     if %ERRORLEVEL% NEQ 0 (
         echo Download failed with error %ERRORLEVEL%.
-        exit /b %ERRORLEVEL%
+        EXIT /B %ERRORLEVEL%
     ) else (
         echo Download complete.
     )
@@ -18,6 +18,11 @@ if not exist "%INSTALLER%" (
 
 echo Installing Anaconda...
 start /wait "" %INSTALLER% /InstallationType=JustMe /AddToPath=1 /RegisterPython=1 /S /D=C:\Anaconda3
+
+if %ERRORLEVEL% NEQ 0 (
+    echo Installation failed with error %ERRORLEVEL%.
+    EXIT /B %ERRORLEVEL%
+)
 
 echo Anaconda Installation Complete!
 
@@ -31,3 +36,5 @@ setx PATH "%PATH%;C:\Anaconda3;C:\Anaconda3\Scripts;C:\Anaconda3\Library\bin"
 @REM conda create -n myenv python=3.8
 @REM conda activate myenv
 @REM pip install -r requirements.txt
+
+EXIT /B 0
