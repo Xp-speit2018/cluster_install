@@ -20,6 +20,10 @@ PowerShell -Command "& {(Get-Content C:\ProgramData\ssh\sshd_config) -replace '#
 :: Ensure the SSH server listens on port 22
 PowerShell -Command "& {(Get-Content C:\ProgramData\ssh\sshd_config) -replace '#Port 22', 'Port 22' | Set-Content C:\ProgramData\ssh\sshd_config}"
 
+:: Comment out AuthorizedKeysFile directive for the administrators group
+echo Commenting out AuthorizedKeysFile directive for the administrators group...
+PowerShell -Command "& {(Get-Content C:\ProgramData\ssh\sshd_config) -replace 'AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys', '#AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys' | Set-Content C:\ProgramData\ssh\sshd_config}"
+
 :: Restart SSHD service to apply changes
 echo Restarting SSHD service...
 net stop sshd
