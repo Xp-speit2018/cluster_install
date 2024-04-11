@@ -1,2 +1,3 @@
-*.exe
+Anaconda*.exe
+PASCO_*.exe
 .env
