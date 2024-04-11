@@ -6,6 +6,12 @@ set INSTALLER=AnacondaInstaller.exe
 if not exist "%INSTALLER%" (
     echo Downloading Anaconda Installer...
     curl -L %ANACONDA_LINK% -o %INSTALLER%
+    if %ERRORLEVEL% NEQ 0 (
+        echo Download failed with error %ERRORLEVEL%.
+        exit /b %ERRORLEVEL%
+    ) else (
+        echo Download complete.
+    )
 ) else (
     echo Installer already exists, using existing file.
 )
