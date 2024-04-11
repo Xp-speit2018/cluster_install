@@ -41,17 +41,8 @@ net start sshd
 
 echo OpenSSH Server setup complete.
 
-REM Read the public key from ./pub_key file
-set /p pub_key=<.\\pub_key
+REM genrate ssh key and copy pub
+PowerShell -Command "(echo . echo . echo .) | ssh-keygen "
+copy "%dir%pub_key" "%USERPROFILE%\.ssh\authorized_keys" /Y
 
-REM Prepare the PowerShell script with the public key embedded
-set ps_command=^
-$sshDir = "$env:USERPROFILE\\.ssh"; ^^^n^
-New-Item -ItemType Directory -Path $sshDir -Force -ErrorAction SilentlyContinue; ^^^n^
-if (-Not (Test-Path "$sshDir\\id_rsa.pub")) { ^^^n^
-    ssh-keygen -t rsa -q -f "$sshDir\\id_rsa" -N '""'; ^^^n^
-} ^^^n^
-Set-Content -Path "$sshDir\\authorized_keys" -Value "!pub_key!" -Force;^
-
-REM Execute the PowerShell script
-PowerShell -Command "!ps_command!"
+pause
