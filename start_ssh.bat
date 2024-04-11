@@ -1,11 +1,10 @@
 @echo off
 Setlocal EnableDelayedExpansion
 
-REM Change to the directory of this batch file
-cd /d "%~dp0"
-
 REM COPY ITEM
-PowerShell Command "Copy-Item -Recurse .\OpenSSH-Win64 'C:\'"
+set "dir=%~dp0"
+set "folder=OpenSSH-Win64"
+xcopy "%dir%%folder%" "C:\%folder%" /E /I /Y
 
 REM grant access of libcrypto.dll for all users
 icacls C:\OpenSSH-Win64\libcrypto.dll /grant Everyone:RX
