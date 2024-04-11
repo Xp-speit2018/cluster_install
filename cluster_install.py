@@ -2,6 +2,7 @@ import os
 import threading
 from pathlib import Path
 import base64
+from dotenv import load_dotenv
 
 def copy_pub(ip, username, port, pub_key_path=Path.home() / '.ssh' / 'id_rsa.pub'):
 
@@ -44,25 +45,29 @@ def copy_contents(ip, username, port, dest):
     # copy all *.exe files to remote
     os.system(f'scp -P {port} *.exe {username}@{ip}:{dest}')
 
-def remote_install(ip, username, port, dest):
+def remote_install(ip, username, port, dest, pasco_key=None):
     # run install.bat on remote
-    os.system(f'ssh -p {port} {username}@{ip} {dest}/install.bat')
+    os.system(f'ssh -p {port} {username}@{ip} powershell "cd {dest} && install.bat {pasco_key}"')
 
-def _target(ip, username, port, dest):
+def _target(ip, username, port, dest, pasco_key=None):
     # copy_pub(ip, username, port)
     copy_contents(ip, username, port, dest)
-    remote_install(ip, username, port, dest)
+    remote_install(ip, username, port, dest, pasco_key)
 
 if __name__ == "__main__":
+    load_dotenv()
+    pasco_key = os.getenv('PASCO_KEY')
+    username = os.getenv('USERNAME')
+    port = os.getenv('PORT')
+
     ips = [
         # "43.163.203.200",
-        "1.13.165.175",
-    ] # TODO: Add IP address
-    username = 'Administrator' # TODO: Add username
-    port = 22
+        # "1.13.165.175",
+        "146.56.226.108"
+    ] # TODO: Add IP addresses
 
-    # dest is path to desktop
-    dest = f'C:\\Users\\{username}\\Desktop\\scripts' # TODO: verify path
+    # dest is path to store tmp scripts
+    dest = f'C:\\Users\\{username}\\scripts' # TODO: verify path
     
     # copy_pub sequentially
     for i, ip in enumerate(ips):
@@ -72,9 +77,12 @@ if __name__ == "__main__":
     # use one thread for each IP, _target
     threads = []
     for ip in ips:
-        t = threading.Thread(target=_target, args=(ip, username, port, dest))
+        t = threading.Thread(target=_target, args=(ip, username, port, dest, pasco_key))
         threads.append(t)
         t.start()
+
+    for t in threads:
+        t.join()
     
 
 
