@@ -70,9 +70,9 @@ if __name__ == "__main__":
     dest = f'scripts'
     
     # copy_pub sequentially
-    # for i, ip in enumerate(ips):
-    #     print(f'Copying public key to {ip}, {i+1}/{len(ips)}')
-    #     copy_pub(ip, username, port)
+    for i, ip in enumerate(ips):
+        print(f'Copying public key to {ip}, {i+1}/{len(ips)}')
+        copy_pub(ip, username, port)
 
     # use one thread for each IP, _target
     threads = []

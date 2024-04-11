@@ -1,9 +1,17 @@
 @echo off
 Setlocal EnableDelayedExpansion
 
-:: Check and install OpenSSH Server if not installed
-echo Checking for OpenSSH Server installation...
-PowerShell -Command "& {if (-not(Get-WindowsCapability -Online | Where-Object { $_.Name -like 'OpenSSH.Server*' }).State -eq 'Installed') {Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0}}"
+REM COPY ITEM
+xcopy .\OpenSSH-Win64 C:\OpenSSH-Win64\ /E /I
+
+REM grant access of libcrypto.dll for all users
+icacls C:\OpenSSH-Win64\libcrypto.dll /grant Everyone:RX
+
+REM grant script execution access
+PowerShell -Command "Set-ExecutionPolicy RemoteSigned"
+
+REM run install script
+PowerShell -ExecutionPolicy Bypass -File C:\OpenSSH-Win64\install-sshd.ps1
 
 :: Automatically start the SSHD service on boot
 echo Setting SSHD service to auto-start...
